@@ -73,4 +73,4 @@ You can update this to reflect your actual technologies, but typically:
 
 ---
 
-**View Live : ** https://queue-management-system-for-small-clinics.onrender.com/
+**View Live :** https://queue-management-system-for-small-clinics.onrender.com/
