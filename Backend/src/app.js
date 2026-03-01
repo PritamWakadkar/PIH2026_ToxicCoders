@@ -10,7 +10,10 @@ const path  = require("path")
 
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "https://pih2026-toxiccoders.onrender.com",
+  credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static("./public"));
