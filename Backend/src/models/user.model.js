@@ -15,12 +15,6 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:[true,"password is required"]
     },
-    phonenumber:{
-        unique:[true,"Mobile number already exists"],
-        type:String,
-        required:[true,"number is required"],
-        match: /^[0-9]{10}$/,
-    },
 });
 
 const userModel = mongoose.model("users",userSchema);

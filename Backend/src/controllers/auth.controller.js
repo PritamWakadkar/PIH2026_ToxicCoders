@@ -2,51 +2,55 @@ const userModel = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-async function registerController(req,res){
-    const {email,username,password,phonenumber} = req.body;
 
 
-    const isUserAlreadyExists = await userModel.findOne({
-        $or:[
-            {username},
-            {email}
-        ]
-    })
+async function registerController(req, res) {
+  try {
+    const { email, username, password } = req.body;
 
-    if(isUserAlreadyExists){
-        return res.status(409).json({
-            message:"User already exists" + (isUserAlreadyExists.email==email?"Email already exist" : "Username already exist")
-        })
+    if (!email || !username || !password) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
-    const hash = await bcrypt.hash(password,10)
-    
-    const user =  await userModel.create({
-        email,
-        username,
-        password:hash,
-        phonenumber,
-    })
+    const isUserAlreadyExists = await userModel.findOne({
+      $or: [{ username }, { email }]
+    });
 
-    const token =jwt.sign(
-        {
-            id:user._id,
-        },
-        process.env.JWT_SECRET,
-        {expiresIn:"1d"}
+    if (isUserAlreadyExists) {
+      return res.status(409).json({
+        message: "User already exists"
+      });
+    }
+
+    const hash = await bcrypt.hash(password, 10);
+
+    const user = await userModel.create({
+      email,
+      username,
+      password: hash,
+    });
+
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
     );
 
-    res.cookie("token",token)
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false, // production me true
+    });
 
-    res.status(201).json({
-        message:"User register successfully",
-        user:{
-            email:user.email,
-            username:user.username,
-            phonenumber:user.phonenumber,
-        }
-    })
-    
+    return res.status(201).json({
+      message: "User registered successfully"
+    });
+
+  } catch (err) {
+    console.log("REGISTER ERROR:", err);
+    return res.status(500).json({
+      message: err.message
+    });
+  }
 }
 
 async function loginController(req,res){
@@ -98,8 +102,20 @@ async function loginController(req,res){
     })
 }
 
+async function handleLogout(){
+  try {
+    await API.post("/auth/logout"); // ya jo tera route hai
+  } catch (error) {
+    console.log(error);
+  } finally {
+    localStorage.removeItem("token");
+    navigate("/");
+  }
+};
+
 module.exports = {
     registerController,
-    loginController
+    loginController,
+    handleLogout,
 }
 
