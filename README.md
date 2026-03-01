@@ -70,3 +70,7 @@ You can update this to reflect your actual technologies, but typically:
 
 3. Start the frontend application
     >npm run dev
+
+---
+
+**View Live : ** https://queue-management-system-for-small-clinics.onrender.com/
