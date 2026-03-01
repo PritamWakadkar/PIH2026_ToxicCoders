@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: "http://pih2026-toxiccoders.onrender.com/api",
   withCredentials: true,   // 🔥 YE SABSE IMPORTANT HAI
 });
 
